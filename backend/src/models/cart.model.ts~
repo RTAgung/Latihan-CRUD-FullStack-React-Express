@@ -1,48 +1,45 @@
 import {DataTypes, Model, Sequelize} from "sequelize";
-import {ProductModel} from "../type/product.type.js";
+import {CartModel} from "../type/card.type.js";
 
 export default (sequelize: Sequelize) => {
-    class Product extends Model<ProductModel> {
+    class Cart extends Model<CartModel> {
         static associate(models: any) {
-            Product.belongsTo(models.Category, {
-                foreignKey: "categoryId",
+            Cart.belongsTo(models.Product, {
+                foreignKey: "productId",
                 as: "category",
                 onDelete: "CASCADE",
                 onUpdate: "CASCADE"
             });
-            Product.belongsToMany(models.User, {
-                through: 'Cart',
-                foreignKey: 'id',
-                as: 'users'
-            })
-            Product.hasMany(models.Cart, {
-                foreignKey: 'productId',
-                as: 'carts',
+            Cart.belongsTo(models.User, {
+                foreignKey: "userId",
+                as: "user",
+                onDelete: "CASCADE",
+                onUpdate: "CASCADE"
             });
         }
     }
 
-    Product.init(
+    Cart.init(
         {
             id: {
-                type: DataTypes.INTEGER,
+                type: DataTypes.UUID,
                 primaryKey: true,
                 allowNull: false
             },
-            name: {
-                type: DataTypes.STRING,
+            userId: {
+                type: DataTypes.UUID,
                 allowNull: false,
             },
-            price: {
-                type: DataTypes.FLOAT,
+            productId: {
+                type: DataTypes.UUID,
                 allowNull: false,
             },
-            categoryId: {
-                type: DataTypes.STRING,
-                allowNull: false,
-            },
-            stock: {
+            qty: {
                 type: DataTypes.INTEGER,
+                allowNull: false,
+            },
+            totalPrice: {
+                type: DataTypes.FLOAT,
                 allowNull: false,
             },
             createdAt: {
@@ -56,10 +53,10 @@ export default (sequelize: Sequelize) => {
         },
         {
             sequelize,
-            modelName: "Product",
-            tableName: "products",
+            modelName: "Cart",
+            tableName: "carts",
         }
     );
 
-    return Product;
+    return Cart;
 };

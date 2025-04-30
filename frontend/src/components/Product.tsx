@@ -1,18 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import {
-    getAllProducts,
-    getProductById,
-    createProduct,
-    updateProduct,
-    deleteProduct,
-} from "../features/products/product.slice";
-import { ProductType } from "../types/product.type";
+import {useEffect} from "react";
+import {useDispatch, useSelector} from "react-redux";
+import {deleteProduct, getAllProducts, getProductById,} from "../features/products/product.slice";
+import {ProductType} from "../types/product.type";
 
-const Product = () => {
+function Product() {
     const dispatch = useDispatch();
-    const { products, loading, error, product } = useSelector(
+    const {products, loading, error, product} = useSelector(
         (state: any) => state.products
     );
 
@@ -27,90 +21,110 @@ const Product = () => {
     const handleGetProductById = (id: string) => {
         dispatch(getProductById(id) as any);
     };
-
     return (
-        <div>
-            <h1>My Products</h1>
+        <div className="flex flex-col items-center justify-center w-full h-screen bg-gray-100">
+            <h1 className="text-4xl font-bold text-gray-800 mb-4">
+                My Products
+            </h1>
             {loading && <div>Loading...</div>}
-            {error != null && <div>{error}</div>}
-            <ProductList
-                products={products}
-                onDetailClick={handleGetProductById}
-                onDeleteClick={handleDeleteProduct}
-            />
-            <ProductDetail product={product} />
+            {error != null && <div className="text-red-500">{error}</div>}
+            <div className="w-full md:w-1/2 p-4 bg-white rounded-lg shadow-lg flex flex-row">
+                <div className="w-1/2">
+                    <ProductList
+                        products={products}
+                        onDetailClick={handleGetProductById}
+                        onDeleteClick={handleDeleteProduct}
+                    />
+                </div>
+                <div className="w-1/2 pl-4">
+                    <ProductDetail product={product}/>
+                </div>
+            </div>
         </div>
     );
-};
+}
 
-const ProductList = (props: {
+function ProductList(props: {
     products: ProductType[];
     onDetailClick: (id: string) => void;
     onDeleteClick: (id: string) => void;
-}) => {
+}) {
     const list = props.products;
-    console.log(list);
 
     if (list.length <= 0) return <></>;
 
     return (
-        <div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>Name</th>
-                        <th>Price</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {list.map((product: ProductType) => (
-                        <tr key={product.id}>
-                            <td>{product.id}</td>
-                            <td>{product.name}</td>
-                            <td>{product.price}</td>
-                            <td>
-                                <button
-                                    onClick={() =>
-                                        props.onDetailClick(product.id)
-                                    }
-                                >
-                                    See Detail
-                                </button>
-                            </td>
-                            <td>
-                                <button
-                                    onClick={() =>
-                                        props.onDeleteClick(product.id)
-                                    }
-                                >
-                                    Delete
-                                </button>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-        </div>
+        <table className="w-full">
+            <thead>
+            <tr className="bg-gray-200">
+                <th className="px-4 py-2">No</th>
+                <th className="px-4 py-2">Name</th>
+                <th className="px-4 py-2">Price</th>
+                <th className="px-4 py-2">Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            {list.map((product: ProductType) => (
+                <tr key={product.id}>
+                    <td className="px-4 py-2">{product.id}</td>
+                    <td className="px-4 py-2">{product.name}</td>
+                    <td className="px-4 py-2">${product.price}</td>
+                    <td className="px-4 py-2">
+                        <button
+                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                            onClick={() =>
+                                props.onDetailClick(product.id)
+                            }
+                        >
+                            See Detail
+                        </button>
+                        <button
+                            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded ml-2"
+                            onClick={() =>
+                                props.onDeleteClick(product.id)
+                            }
+                        >
+                            Delete
+                        </button>
+                    </td>
+                </tr>
+            ))}
+            </tbody>
+        </table>
     );
-};
+}
 
-const ProductDetail = (props: { product: ProductType }) => {
+function ProductDetail(props: { product: ProductType }) {
     const data = props.product;
-    console.log(data);
 
     if (data == null) return <></>;
 
     return (
-        <div>
-            <h3>Product Detail</h3>
-            <p>{data.id}</p>
-            <p>{data.name}</p>
-            <p>{data.price}</p>
-            <p>{data.category}</p>
-            <p>{data.stock}</p>
-        </div>
+        <table className="w-full">
+            <tbody>
+            <tr>
+                <th className="px-4 py-2">Id</th>
+                <td className="px-4 py-2">{data.id}</td>
+            </tr>
+            <tr>
+                <th className="px-4 py-2">Name</th>
+                <td className="px-4 py-2">{data.name}</td>
+            </tr>
+            <tr>
+                <th className="px-4 py-2">Price</th>
+                <td className="px-4 py-2">${data.price}</td>
+            </tr>
+            <tr>
+                <th className="px-4 py-2">Category</th>
+                <td className="px-4 py-2">{data.category}</td>
+            </tr>
+            <tr>
+                <th className="px-4 py-2">Stock</th>
+                <td className="px-4 py-2">{data.stock}</td>
+            </tr>
+            </tbody>
+        </table>
     );
-};
+}
 
 export default Product;

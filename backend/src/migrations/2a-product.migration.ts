@@ -1,13 +1,12 @@
-import { QueryInterface, DataTypes } from "sequelize";
+import {QueryInterface, DataTypes} from "sequelize";
 
 export default {
     up: async (queryInterface: QueryInterface) => {
         await queryInterface.createTable("products", {
             id: {
-                type: DataTypes.INTEGER,
+                type: DataTypes.UUID,
                 primaryKey: true,
-                allowNull: false,
-                autoIncrement: true,
+                allowNull: false
             },
             name: {
                 type: DataTypes.STRING,
@@ -17,9 +16,15 @@ export default {
                 type: DataTypes.FLOAT,
                 allowNull: false,
             },
-            category: {
-                type: DataTypes.STRING,
+            categoryId: {
+                type: DataTypes.UUID,
                 allowNull: false,
+                references: {
+                    model: "categories",
+                    key: "id",
+                },
+                onUpdate: "CASCADE",
+                onDelete: "CASCADE",
             },
             stock: {
                 type: DataTypes.INTEGER,
@@ -42,7 +47,3 @@ export default {
         await queryInterface.dropTable("products");
     },
 };
-
-export function up(queryInterface: QueryInterface): any {
-    throw new Error("Function not implemented.");
-}

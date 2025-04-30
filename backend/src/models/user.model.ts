@@ -1,28 +1,22 @@
 import {DataTypes, Model, Sequelize} from "sequelize";
-import {ProductModel} from "../type/product.type.js";
+import {UserModel} from "../type/user.type.js";
 
 export default (sequelize: Sequelize) => {
-    class Product extends Model<ProductModel> {
+    class User extends Model<UserModel> {
         static associate(models: any) {
-            Product.belongsTo(models.Category, {
-                foreignKey: "categoryId",
-                as: "category",
-                onDelete: "CASCADE",
-                onUpdate: "CASCADE"
-            });
-            Product.belongsToMany(models.User, {
+            User.belongsToMany(models.Product, {
                 through: 'Cart',
-                foreignKey: 'id',
-                as: 'users'
+                foreignKey: 'userId',
+                as: 'products'
             })
-            Product.hasMany(models.Cart, {
-                foreignKey: 'productId',
+            User.hasMany(models.Cart, {
+                foreignKey: 'userId',
                 as: 'carts',
             });
         }
     }
 
-    Product.init(
+    User.init(
         {
             id: {
                 type: DataTypes.INTEGER,
@@ -33,16 +27,17 @@ export default (sequelize: Sequelize) => {
                 type: DataTypes.STRING,
                 allowNull: false,
             },
-            price: {
-                type: DataTypes.FLOAT,
-                allowNull: false,
-            },
-            categoryId: {
+            username: {
                 type: DataTypes.STRING,
                 allowNull: false,
             },
-            stock: {
-                type: DataTypes.INTEGER,
+            email: {
+                type: DataTypes.STRING,
+                allowNull: false,
+                unique: true
+            },
+            password: {
+                type: DataTypes.STRING,
                 allowNull: false,
             },
             createdAt: {
@@ -56,10 +51,10 @@ export default (sequelize: Sequelize) => {
         },
         {
             sequelize,
-            modelName: "Product",
-            tableName: "products",
+            modelName: "User",
+            tableName: "users",
         }
     );
 
-    return Product;
+    return User;
 };
