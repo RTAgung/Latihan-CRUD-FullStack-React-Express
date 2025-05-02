@@ -2,6 +2,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import ProductAPI from "../../services/api/product.api";
 import { ProductFormType, ProductStateType } from "../../types/product.type";
+import categoryApi from "../../services/api/category.api";
 
 export const getAllProducts = createAsyncThunk(
     "products/getAll",
@@ -31,7 +32,10 @@ export const createProduct = createAsyncThunk(
     "products/create",
     async (product: ProductFormType, { rejectWithValue }) => {
         try {
-            const response = await ProductAPI.create(product);
+            const { id, ...productData } = product;
+            const response = await ProductAPI.create(productData);
+            console.log(response);
+
             return response;
         } catch (error: any) {
             return rejectWithValue(error.response.data);
@@ -66,6 +70,18 @@ export const deleteProduct = createAsyncThunk(
     }
 );
 
+export const getAllCategory = createAsyncThunk(
+    "categories/getAll",
+    async (_, { rejectWithValue }) => {
+        try {
+            const response = await categoryApi.getAll();
+            return response;
+        } catch (error: any) {
+            return rejectWithValue(error.response.data);
+        }
+    }
+);
+
 const initialState: ProductStateType = {
     products: [],
     product: null,
@@ -73,6 +89,7 @@ const initialState: ProductStateType = {
     error: null,
     message: null,
     status: null,
+    categories: [],
 };
 
 const productSlice = createSlice({
@@ -156,6 +173,9 @@ const productSlice = createSlice({
             .addCase(deleteProduct.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
+            })
+            .addCase(getAllCategory.fulfilled, (state, action) => {
+                state.categories = action.payload.data;
             });
     },
 });

@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { LogOut } from "lucide-react";
 import ProductModelAPI from "../../abstract/model.abstract.js";
 
 const BASE_URL_API = "http://127.0.0.1:3000/api";
@@ -31,7 +32,12 @@ class ProductAPI extends ProductModelAPI {
             },
             body: JSON.stringify(product),
         });
+        console.log("createapi 1" + JSON.stringify(product));
+        console.log(`createapi 2 ${response.body}`, response);
+
         const data = await response.json();
+
+        console.log(`createapi 3 ${JSON.stringify(data)}`);
         return data;
     }
 

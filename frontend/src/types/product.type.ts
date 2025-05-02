@@ -15,6 +15,7 @@ export interface ProductType {
 export interface ProductStateType {
     products: ProductType[];
     product: ProductType | null;
+    categories: CategoryType[];
     loading: boolean;
     error: any;
     message: string | null;
