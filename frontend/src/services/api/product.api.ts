@@ -32,12 +32,8 @@ class ProductAPI extends ProductModelAPI {
             },
             body: JSON.stringify(product),
         });
-        console.log("createapi 1" + JSON.stringify(product));
-        console.log(`createapi 2 ${response.body}`, response);
 
         const data = await response.json();
-
-        console.log(`createapi 3 ${JSON.stringify(data)}`);
         return data;
     }
 

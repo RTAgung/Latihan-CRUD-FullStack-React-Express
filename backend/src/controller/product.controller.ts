@@ -73,8 +73,6 @@ class ProductController extends AbstractModel {
             new Promise((resolve) => setTimeout(resolve, ms));
         await delay(500);
         try {
-            console.log("req.body", { ...req.body });
-
             const product = { ...req.body };
             await db.Product.create({ ...product, id: uuidV4() });
 

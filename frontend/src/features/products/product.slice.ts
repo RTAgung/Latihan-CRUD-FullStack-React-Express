@@ -34,7 +34,6 @@ export const createProduct = createAsyncThunk(
         try {
             const { id, ...productData } = product;
             const response = await ProductAPI.create(productData);
-            console.log(response);
 
             return response;
         } catch (error: any) {

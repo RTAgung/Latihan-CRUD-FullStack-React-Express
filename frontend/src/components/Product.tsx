@@ -61,8 +61,6 @@ function Product() {
         } else {
             dispatch(createProduct(product) as any);
         }
-        console.log(isUpdateForm);
-        console.log(product);
 
         setIsUpdateForm(false);
         setProductEdit(null);
