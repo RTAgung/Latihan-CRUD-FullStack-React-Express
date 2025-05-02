@@ -1,10 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+import { CategoryType } from "./category.type";
+
 export interface ProductType {
     id: string;
     name: string;
     price: number;
-    category: string;
+    category: CategoryType;
     stock: number;
     createdAt: Date;
     updatedAt: Date;

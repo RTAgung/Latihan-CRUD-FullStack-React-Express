@@ -1,15 +1,20 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteProduct, getAllProducts, getProductById } from "../features/products/product.slice";
+import {
+    deleteProduct,
+    getAllProducts,
+    getProductById,
+} from "../features/products/product.slice";
 import { ProductType } from "../types/product.type";
+import { useToast } from "./context/ToastContext";
 
 function Product() {
     const dispatch = useDispatch();
     const { products, loading, error, product } = useSelector(
         (state: any) => state.products
     );
-    const [modalMessage, setModalMessage] = useState<string | null>(null);
+    const { showToast } = useToast();
 
     useEffect(() => {
         dispatch(getAllProducts() as any);
@@ -17,13 +22,13 @@ function Product() {
 
     useEffect(() => {
         if (loading) {
-            setModalMessage("Loading...");
+            showToast("Loading...");
         } else if (error) {
-            setModalMessage(`Error: ${error}`);
+            showToast("Error: ${error}");
         } else {
-            setModalMessage(null);
+            showToast("");
         }
-    }, [loading, error]);
+    }, [loading, error, showToast]);
 
     const handleDeleteProduct = (id: string) => {
         dispatch(deleteProduct(id) as any);
@@ -35,21 +40,6 @@ function Product() {
 
     return (
         <div className="flex flex-col items-center">
-            {modalMessage && (
-                <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50">
-                    <div className="bg-white p-8 rounded shadow-lg">
-                        <p>{modalMessage}</p>
-                        {error && (
-                            <button
-                                className="mt-4 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-                                onClick={() => setModalMessage(null)}
-                            >
-                                Close
-                            </button>
-                        )}
-                    </div>
-                </div>
-            )}
             <h1 className="text-4xl font-bold text-gray-800 py-[45px]">
                 My Products
             </h1>
@@ -71,11 +61,13 @@ function Product() {
     );
 }
 
-function ProductList(props: Readonly<{
-    products: ProductType[];
-    onDetailClick: (id: string) => void;
-    onDeleteClick: (id: string) => void;
-}>) {
+function ProductList(
+    props: Readonly<{
+        products: ProductType[];
+        onDetailClick: (id: string) => void;
+        onDeleteClick: (id: string) => void;
+    }>
+) {
     const list = props.products;
 
     if (list.length <= 0) return <></>;
@@ -92,8 +84,13 @@ function ProductList(props: Readonly<{
             </thead>
             <tbody>
                 {list.map((product: ProductType, index: number) => (
-                    <tr className="last:border-0 border-b border-gray-300" key={product.id}>
-                        <td className="text-center px-4 py-2 max-w-[10px]">{index + 1}</td>
+                    <tr
+                        className="last:border-0 border-b border-gray-300"
+                        key={product.id}
+                    >
+                        <td className="text-center px-4 py-2 max-w-[10px]">
+                            {index + 1}
+                        </td>
                         <td className="px-4 py-2">{product.name}</td>
                         <td className="px-4 py-2">${product.price}</td>
                         <td className="px-4 py-2 flex flex-row w-full justify-end">
@@ -123,32 +120,34 @@ function ProductDetail(props: Readonly<{ product: ProductType }>) {
     if (data == null) return <></>;
 
     return (
-        <table className="w-full">
-            <tbody>
-                <tr>
-                    <th className="px-4 py-2">Id</th>
-                    <td className="px-4 py-2">{data.id}</td>
-                </tr>
-                <tr>
-                    <th className="px-4 py-2">Name</th>
-                    <td className="px-4 py-2">{data.name}</td>
-                </tr>
-                <tr>
-                    <th className="px-4 py-2">Price</th>
-                    <td className="px-4 py-2">${data.price}</td>
-                </tr>
-                <tr>
-                    <th className="px-4 py-2">Category</th>
-                    <td className="px-4 py-2">{data.category}</td>
-                </tr>
-                <tr>
-                    <th className="px-4 py-2">Stock</th>
-                    <td className="px-4 py-2">{data.stock}</td>
-                </tr>
-            </tbody>
-        </table>
+        <div>
+            <h3 className="text-lg font-semibold">Product Detail</h3>
+            <table className="w-full mt-5">
+                <tbody>
+                    <tr>
+                        <th className="px-4 py-2 text-left">Id</th>
+                        <td className="px-4 py-2">: {data.id}</td>
+                    </tr>
+                    <tr>
+                        <th className="px-4 py-2 text-left">Name</th>
+                        <td className="px-4 py-2">: {data.name}</td>
+                    </tr>
+                    <tr>
+                        <th className="px-4 py-2 text-left">Price</th>
+                        <td className="px-4 py-2">: ${data.price}</td>
+                    </tr>
+                    <tr>
+                        <th className="px-4 py-2 text-left">Category</th>
+                        <td className="px-4 py-2">: {data.category.name}</td>
+                    </tr>
+                    <tr>
+                        <th className="px-4 py-2 text-left">Stock</th>
+                        <td className="px-4 py-2">: {data.stock}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     );
 }
 
 export default Product;
-

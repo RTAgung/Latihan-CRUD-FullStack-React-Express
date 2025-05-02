@@ -9,7 +9,12 @@ class ProductController extends AbstractModel {
         await delay(500);
         try {
             const id = req.params.id;
-            const product = await db.Product.findByPk(id);
+            const product = await db.Product.findByPk(id, {
+                include: [{
+                    model: db.Category,
+                    as: 'category'
+                }]
+            });
 
             if (product != null) {
                 res.json({
