@@ -1,10 +1,12 @@
 import express from "express";
-import UserController from "../controller/user.controller.js";
+import UserController from "../controllers/user.controller.js";
 
 const router = express.Router();
 
-router.get("/cart/:id", UserController.getUserCartById);
-router.delete("/cart/:id", UserController.deleteCartById);
-router.post("/cart/:id", UserController.createCartById);
+router.get("/", UserController.getAll);
+router.get("/:id", UserController.getById);
+router.post("/", UserController.create);
+router.put("/:id", UserController.update);
+router.delete("/:id", UserController.delete);
 
 export default router;

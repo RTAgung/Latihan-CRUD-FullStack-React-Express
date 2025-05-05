@@ -1,5 +1,4 @@
-// ToastContext.tsx
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState, ReactNode } from "react";
 
 interface ToastContextProps {
     showToast: (message: string) => void;

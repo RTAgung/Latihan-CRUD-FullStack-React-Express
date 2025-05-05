@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { LogOut } from "lucide-react";
 import ProductModelAPI from "../../abstract/model.abstract.js";
 
 const BASE_URL_API = "http://127.0.0.1:3000/api";

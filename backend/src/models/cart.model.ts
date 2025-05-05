@@ -1,5 +1,5 @@
 import {DataTypes, Model, Sequelize} from "sequelize";
-import {CartModel} from "../type/card.type.js";
+import {CartModel} from "../type/cart.type.js";
 
 export default (sequelize: Sequelize) => {
     class Cart extends Model<CartModel> {
@@ -39,7 +39,7 @@ export default (sequelize: Sequelize) => {
                 allowNull: false,
             },
             totalPrice: {
-                type: DataTypes.FLOAT,
+                type: DataTypes.INTEGER,
                 allowNull: false,
             },
             createdAt: {

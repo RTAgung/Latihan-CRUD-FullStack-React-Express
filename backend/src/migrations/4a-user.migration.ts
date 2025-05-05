@@ -2,39 +2,35 @@ import { DataTypes, QueryInterface } from "sequelize";
 
 export default {
     up: async (queryInterface: QueryInterface) => {
-        await queryInterface.createTable("carts", {
+        await queryInterface.createTable("users", {
             id: {
                 type: DataTypes.UUID,
                 primaryKey: true,
-                allowNull: false
+                allowNull: false,
             },
-            userId: {
+            username: {
+                type: DataTypes.STRING,
+                allowNull: false,
+                unique: true,
+            },
+            email: {
+                type: DataTypes.STRING,
+                allowNull: false,
+                unique: true,
+            },
+            password: {
+                type: DataTypes.STRING,
+                allowNull: false,
+            },
+            roleId: {
                 type: DataTypes.UUID,
                 allowNull: false,
                 references: {
-                    model: "users",
+                    model: "roles",
                     key: "id",
                 },
                 onUpdate: "CASCADE",
                 onDelete: "CASCADE",
-            },
-            productId: {
-                type: DataTypes.UUID,
-                allowNull: false,
-                references: {
-                    model: "products",
-                    key: "id",
-                },
-                onUpdate: "CASCADE",
-                onDelete: "CASCADE",
-            },
-            qty: {
-                type: DataTypes.INTEGER,
-                allowNull: false,
-            },
-            totalPrice: {
-                type: DataTypes.FLOAT,
-                allowNull: false,
             },
             createdAt: {
                 type: DataTypes.DATE,
@@ -45,11 +41,11 @@ export default {
                 type: DataTypes.DATE,
                 allowNull: false,
                 defaultValue: new Date(),
-            }
+            },
         });
     },
 
     down: async (queryInterface: QueryInterface) => {
-        await queryInterface.dropTable("carts");
+        await queryInterface.dropTable("users");
     },
 };

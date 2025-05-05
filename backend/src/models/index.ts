@@ -25,9 +25,17 @@ const db: DB = { Sequelize } as DB;
 
 let sequelize: Sequelize;
 if (config.use_env_variable) {
-    sequelize = new Sequelize(process.env[config.use_env_variable] as string, config as any);
+    sequelize = new Sequelize(
+        process.env[config.use_env_variable] as string,
+        config as any
+    );
 } else {
-    sequelize = new Sequelize(config.database ?? "", config.username ?? "", config.password ?? "", config as any);
+    sequelize = new Sequelize(
+        config.database ?? "",
+        config.username ?? "",
+        config.password ?? "",
+        config as any
+    );
 }
 
 const loadModels = async () => {
@@ -41,7 +49,9 @@ const loadModels = async () => {
         );
     });
 
-    const modelImports = files.map((file) => import(pathToFileURL(path.join(__dirname, file)).href));
+    const modelImports = files.map(
+        (file) => import(pathToFileURL(path.join(__dirname, file)).href)
+    );
 
     let models = await Promise.all(modelImports);
     appModels.forEach((appModel: any) => {

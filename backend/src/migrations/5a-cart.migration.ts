@@ -1,32 +1,38 @@
-import {QueryInterface, DataTypes} from "sequelize";
+import { DataTypes, QueryInterface } from "sequelize";
 
 export default {
     up: async (queryInterface: QueryInterface) => {
-        await queryInterface.createTable("products", {
+        await queryInterface.createTable("carts", {
             id: {
                 type: DataTypes.UUID,
                 primaryKey: true,
-                allowNull: false
-            },
-            name: {
-                type: DataTypes.STRING,
                 allowNull: false,
             },
-            price: {
-                type: DataTypes.INTEGER,
-                allowNull: false,
-            },
-            categoryId: {
+            userId: {
                 type: DataTypes.UUID,
                 allowNull: false,
                 references: {
-                    model: "categories",
+                    model: "users",
                     key: "id",
                 },
                 onUpdate: "CASCADE",
                 onDelete: "CASCADE",
             },
-            stock: {
+            productId: {
+                type: DataTypes.UUID,
+                allowNull: false,
+                references: {
+                    model: "products",
+                    key: "id",
+                },
+                onUpdate: "CASCADE",
+                onDelete: "CASCADE",
+            },
+            qty: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+            },
+            totalPrice: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
             },
@@ -39,11 +45,11 @@ export default {
                 type: DataTypes.DATE,
                 allowNull: false,
                 defaultValue: new Date(),
-            }
+            },
         });
     },
 
     down: async (queryInterface: QueryInterface) => {
-        await queryInterface.dropTable("products");
+        await queryInterface.dropTable("carts");
     },
 };

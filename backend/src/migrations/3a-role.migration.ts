@@ -1,17 +1,17 @@
-import {QueryInterface, DataTypes} from "sequelize";
+import { DataTypes, QueryInterface } from "sequelize";
 
 export default {
     up: async (queryInterface: QueryInterface) => {
-        await queryInterface.createTable("categories", {
+        await queryInterface.createTable("roles", {
             id: {
                 type: DataTypes.UUID,
                 primaryKey: true,
-                allowNull: false
+                allowNull: false,
             },
             name: {
                 type: DataTypes.STRING,
                 allowNull: false,
-                unique: true
+                unique: true,
             },
             createdAt: {
                 type: DataTypes.DATE,
@@ -22,11 +22,12 @@ export default {
                 type: DataTypes.DATE,
                 allowNull: false,
                 defaultValue: new Date(),
-            }
+            },
         });
     },
 
     down: async (queryInterface: QueryInterface) => {
-        await queryInterface.dropTable("categories");
+        await queryInterface.dropTable("roles");
     },
 };
+

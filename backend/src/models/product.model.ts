@@ -25,7 +25,7 @@ export default (sequelize: Sequelize) => {
     Product.init(
         {
             id: {
-                type: DataTypes.INTEGER,
+                type: DataTypes.UUID,
                 primaryKey: true,
                 allowNull: false
             },
@@ -34,11 +34,11 @@ export default (sequelize: Sequelize) => {
                 allowNull: false,
             },
             price: {
-                type: DataTypes.FLOAT,
+                type: DataTypes.INTEGER,
                 allowNull: false,
             },
             categoryId: {
-                type: DataTypes.STRING,
+                type: DataTypes.UUID,
                 allowNull: false,
             },
             stock: {

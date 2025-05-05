@@ -1,35 +1,37 @@
-import {Request, Response} from "express";
+import { Request, Response } from "express";
 import db from "../models/index.js";
-import {v4 as uuidV4} from "uuid";
+import { v4 as uuidV4 } from "uuid";
 
-class UserController {
+class UserCartController {
     async getUserCartById(req: Request, res: Response): Promise<any> {
-        const delay = (ms: number) =>
-            new Promise((resolve) => setTimeout(resolve, ms));
-        await delay(500);
         try {
             const userId = req.params.id;
             const users = await db.User.findAll({
-                where: {id: userId},
+                where: { id: userId },
                 attributes: {
-                    exclude: ['createdAt', 'updatedAt'], // Exclude these fields from User
+                    exclude: ["createdAt", "updatedAt"], // Exclude these fields from User
                 },
                 include: [
                     {
                         model: db.Cart,
-                        as: 'carts',
+                        as: "carts",
                         attributes: {
-                            exclude: ['userId', 'productId', 'createdAt', 'updatedAt'], // Exclude from Cart too
+                            exclude: [
+                                "userId",
+                                "productId",
+                                "createdAt",
+                                "updatedAt",
+                            ], // Exclude from Cart too
                         },
                         include: [
                             {
                                 model: db.Product,
-                                as: 'product',
+                                as: "product",
                                 attributes: {
-                                    exclude: ['createdAt', 'updatedAt'], // Exclude from Product too
+                                    exclude: ["createdAt", "updatedAt"], // Exclude from Product too
                                 },
-                            }
-                        ]
+                            },
+                        ],
                     },
                 ],
             });
@@ -48,9 +50,6 @@ class UserController {
     }
 
     async deleteCartById(req: Request, res: Response): Promise<any> {
-        const delay = (ms: number) =>
-            new Promise((resolve) => setTimeout(resolve, ms));
-        await delay(500);
         try {
             const cartId = req.params.id;
             const cart = await db.Cart.findByPk(cartId);
@@ -75,22 +74,19 @@ class UserController {
     }
 
     async createCartById(req: Request, res: Response): Promise<any> {
-        const delay = (ms: number) =>
-            new Promise((resolve) => setTimeout(resolve, ms));
-        await delay(500);
         try {
             const userId = req.params.id;
             const productId = req.body.productId;
             const product = await db.Product.findByPk(productId);
             const [cart, created] = await db.Cart.findOrCreate({
-                where: {userId, productId},
+                where: { userId, productId },
                 defaults: {
                     id: uuidV4(),
                     userId: userId,
                     productId: productId,
                     qty: 1,
-                    totalPrice: product.price
-                }
+                    totalPrice: product.price,
+                },
             });
 
             if (!created) {
@@ -101,7 +97,9 @@ class UserController {
 
             res.json({
                 status: "success",
-                message: created ? "Cart created successfully" : "Cart updated successfully",
+                message: created
+                    ? "Cart created successfully"
+                    : "Cart updated successfully",
                 data: cart,
             });
         } catch (error: any) {
@@ -113,4 +111,4 @@ class UserController {
     }
 }
 
-export default new UserController();
+export default new UserCartController();

@@ -1,29 +1,29 @@
-import {DataTypes, Model, Sequelize} from "sequelize";
-import {CategoryModel} from "../type/category.type";
+import { DataTypes, Model, Sequelize } from "sequelize";
+import { RoleModel } from "../type/role.type.js";
 
 export default (sequelize: Sequelize) => {
-    class Category extends Model<CategoryModel> {
+    class Role extends Model<RoleModel> {
         static associate(models: any) {
-            Category.hasMany(models.Product, {
-                foreignKey: "categoryId",
-                as: "products",
+            Role.hasOne(models.User, {
+                foreignKey: "roleId",
+                as: "user",
                 onDelete: "CASCADE",
-                onUpdate: "CASCADE"
+                onUpdate: "CASCADET",
             });
         }
     }
 
-    Category.init(
+    Role.init(
         {
             id: {
                 type: DataTypes.UUID,
                 primaryKey: true,
-                allowNull: false
+                allowNull: false,
             },
             name: {
                 type: DataTypes.STRING,
                 allowNull: false,
-                unique: true
+                unique: true,
             },
             createdAt: {
                 type: DataTypes.DATE,
@@ -36,10 +36,10 @@ export default (sequelize: Sequelize) => {
         },
         {
             sequelize,
-            modelName: "Category",
-            tableName: "categories",
+            modelName: "Role",
+            tableName: "roles",
         }
     );
 
-    return Category;
+    return Role;
 };

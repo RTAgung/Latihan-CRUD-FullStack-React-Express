@@ -22,7 +22,7 @@ export default {
             if (existedCartIndex == -1) {
                 carts.push({
                     id: uuidV4(),
-                    userId: users[Math.floor(Math.random() * users.length)].id,
+                    userId: user.id,
                     productId: product.id,
                     qty: 1,
                     totalPrice: product.price,

@@ -2,13 +2,9 @@ import { Request, Response } from "express";
 import AbstractModel from "../abstracts/model.abstract.js";
 import db from "../models/index.js";
 import { v4 as uuidV4 } from "uuid";
-import { log } from "console";
 
 class ProductController extends AbstractModel {
     async getById(req: Request, res: Response): Promise<any> {
-        const delay = (ms: number) =>
-            new Promise((resolve) => setTimeout(resolve, ms));
-        await delay(500);
         try {
             const id = req.params.id;
             const product = await db.Product.findByPk(id, {
@@ -41,9 +37,6 @@ class ProductController extends AbstractModel {
     }
 
     async getAll(req: Request, res: Response): Promise<any> {
-        const delay = (ms: number) =>
-            new Promise((resolve) => setTimeout(resolve, ms));
-        await delay(500);
         try {
             const products = await db.Product.findAll({
                 include: [
@@ -69,12 +62,11 @@ class ProductController extends AbstractModel {
     }
 
     async create(req: Request, res: Response): Promise<any> {
-        const delay = (ms: number) =>
-            new Promise((resolve) => setTimeout(resolve, ms));
-        await delay(500);
         try {
-            const product = { ...req.body };
-            await db.Product.create({ ...product, id: uuidV4() });
+            const product = await db.Product.create({
+                ...req.body,
+                id: uuidV4(),
+            });
 
             res.json({
                 status: "success",
@@ -90,30 +82,23 @@ class ProductController extends AbstractModel {
     }
 
     async update(req: Request, res: Response): Promise<any> {
-        const delay = (ms: number) =>
-            new Promise((resolve) => setTimeout(resolve, ms));
-        await delay(500);
-
         try {
             const { id } = req.params;
             const isSuccess = await db.Product.update(
                 { ...req.body },
                 { where: { id } }
-            )[0];
+            ).then((res: number[]) => res[0] > 0);
 
-            if (isSuccess) {
-                const product = await db.Product.findByPk(id);
-                res.json({
-                    status: "success",
-                    message: "Product updated successfully",
-                    data: product,
-                });
-            } else {
-                res.json({
-                    status: "error",
-                    message: "Server error",
-                });
+            if (!isSuccess) {
+                throw new Error("Server error");
             }
+
+            const product = await db.Product.findByPk(id);
+            res.json({
+                status: "success",
+                message: "Product updated successfully",
+                data: product,
+            });
         } catch (error: any) {
             res.json({
                 status: "error",
@@ -123,9 +108,6 @@ class ProductController extends AbstractModel {
     }
 
     async delete(req: Request, res: Response): Promise<any> {
-        const delay = (ms: number) =>
-            new Promise((resolve) => setTimeout(resolve, ms));
-        await delay(500);
         try {
             const { id } = req.params;
             const product = await db.Product.findByPk(id);
